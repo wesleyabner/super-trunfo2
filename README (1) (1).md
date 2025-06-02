@@ -1,0 +1,44 @@
+# 🦁 Super Trunfo - Jogo em C
+
+Este projeto é um jogo de cartas **Super Trunfo**, com temática de **animais selvagens**, desenvolvido em linguagem **C**.
+
+## 🎮 Como Jogar
+
+O jogo seleciona aleatoriamente uma carta para o jogador e outra para a máquina.  
+Você escolhe um dos atributos e o jogo compara os valores.  
+Se a sua carta for um **Super Trunfo**, você vence automaticamente (a menos que o outro também seja).
+
+### Atributos disponíveis:
+
+- 1️⃣ Força
+- 2️⃣ Velocidade
+- 3️⃣ Inteligência
+- 4️⃣ Peso
+- 5️⃣ Longevidade
+
+## ⚙️ Como Compilar e Executar
+
+```bash
+gcc super_trunfo.c -o super_trunfo
+./super_trunfo
+```
+
+> Certifique-se de ter o compilador GCC instalado no seu sistema.
+
+## 🗂 Histórico de Partidas
+
+O jogo salva automaticamente o resultado das partidas no arquivo `historico_partidas.txt` com data, hora e atributos comparados.
+
+## 📁 Arquivos
+
+- `super_trunfo.c`: Código-fonte principal
+- `historico_partidas.txt`: Registro das partidas (gerado automaticamente após jogar)
+- `README.md`: Instruções e documentação
+
+## 📅 Entrega
+
+Este repositório foi criado para atender ao desafio da disciplina com prazo até **17/06/2025**.
+
+---
+
+Desenvolvido para fins educacionais.
