@@ -1,44 +1,72 @@
-# 🦁 Super Trunfo - Jogo em C
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <string.h>
 
-Este projeto é um jogo de cartas **Super Trunfo**, com temática de **animais selvagens**, desenvolvido em linguagem **C**.
+#define NUM_CARTAS 5
+#define NUM_ATRIBUTOS 5
 
-## 🎮 Como Jogar
+typedef struct {
+    char nome[30];
+    int forca;
+    int velocidade;
+    int inteligencia;
+    int peso;
+    int longevidade;
+    int superTrunfo;
+} Carta;
 
-O jogo seleciona aleatoriamente uma carta para o jogador e outra para a máquina.  
-Você escolhe um dos atributos e o jogo compara os valores.  
-Se a sua carta for um **Super Trunfo**, você vence automaticamente (a menos que o outro também seja).
+Carta baralho[NUM_CARTAS] = {
+    {"Leão", 90, 80, 60, 190, 14, 0},
+    {"Elefante", 100, 25, 70, 6000, 70, 1},
+    {"Tigre", 88, 85, 65, 220, 15, 0},
+    {"Águia", 40, 160, 75, 6, 25, 0},
+    {"Gorila", 85, 40, 90, 160, 40, 0}
+};
 
-### Atributos disponíveis:
+void imprimirCarta(Carta c) {
+    printf("🐾 %s\n", c.nome);
+    printf("  Força: %d\n", c.forca);
+    printf("  Velocidade: %d\n", c.velocidade);
+    printf("  Inteligência: %d\n", c.inteligencia);
+    printf("  Peso: %d\n", c.peso);
+    printf("  Longevidade: %d\n", c.longevidade);
+    if (c.superTrunfo) {
+        printf("  SUPER TRUNFO!\n");
+    }
+}
 
-- 1️⃣ Força
-- 2️⃣ Velocidade
-- 3️⃣ Inteligência
-- 4️⃣ Peso
-- 5️⃣ Longevidade
+const char* nomeAtributo(int atributo) {
+    switch (atributo) {
+        case 1: return "Força";
+        case 2: return "Velocidade";
+        case 3: return "Inteligência";
+        case 4: return "Peso";
+        case 5: return "Longevidade";
+        default: return "Desconhecido";
+    }
+}
 
-## ⚙️ Como Compilar e Executar
+int comparar(Carta jogador, Carta maquina, int atributo) {
+    if (jogador.superTrunfo) return 1;
+    if (maquina.superTrunfo) return -1;
 
-```bash
-gcc super_trunfo.c -o super_trunfo
-./super_trunfo
-```
+    int valorJogador, valorMaquina;
+    switch (atributo) {
+        case 1: valorJogador = jogador.forca; valorMaquina = maquina.forca; break;
+        case 2: valorJogador = jogador.velocidade; valorMaquina = maquina.velocidade; break;
+        case 3: valorJogador = jogador.inteligencia; valorMaquina = maquina.inteligencia; break;
+        case 4: valorJogador = jogador.peso; valorMaquina = maquina.peso; break;
+        case 5: valorJogador = jogador.longevidade; valorMaquina = maquina.longevidade; break;
+        default: return 0;
+    }
 
-> Certifique-se de ter o compilador GCC instalado no seu sistema.
+    if (valorJogador > valorMaquina) return 1;
+    if (valorJogador < valorMaquina) return -1;
+    return 0;
+}
 
-## 🗂 Histórico de Partidas
-
-O jogo salva automaticamente o resultado das partidas no arquivo `historico_partidas.txt` com data, hora e atributos comparados.
-
-## 📁 Arquivos
-
-- `super_trunfo.c`: Código-fonte principal
-- `historico_partidas.txt`: Registro das partidas (gerado automaticamente após jogar)
-- `README.md`: Instruções e documentação
-
-## 📅 Entrega
-
-Este repositório foi criado para atender ao desafio da disciplina com prazo até **17/06/2025**.
-
----
-
-Desenvolvido para fins educacionais.
+void salvarResultado(Carta jogador, Carta maquina, int atributo, int resultado) {
+    FILE *fp = fopen("historico_partidas.txt", "a");
+    if (fp == NULL) {
+        printf(
