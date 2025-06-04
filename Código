@@ -1,72 +1,62 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include <string.h>
 
-#define NUM_CARTAS 5
-#define NUM_ATRIBUTOS 5
+import random
 
-typedef struct {
-    char nome[30];
-    int forca;
-    int velocidade;
-    int inteligencia;
-    int peso;
-    int longevidade;
-    int superTrunfo;
-} Carta;
+# Cartas de animais
+cartas = [
+    {"nome": "Leão", "força": 90, "velocidade": 80, "inteligência": 60, "resistência": 70},
+    {"nome": "Elefante", "força": 95, "velocidade": 40, "inteligência": 70, "resistência": 90},
+    {"nome": "Guepardo", "força": 65, "velocidade": 100, "inteligência": 60, "resistência": 60},
+    {"nome": "Corvo", "força": 30, "velocidade": 60, "inteligência": 95, "resistência": 50},
+    {"nome": "Urso Polar", "força": 85, "velocidade": 50, "inteligência": 65, "resistência": 95}
+]
 
-Carta baralho[NUM_CARTAS] = {
-    {"Leão", 90, 80, 60, 190, 14, 0},
-    {"Elefante", 100, 25, 70, 6000, 70, 1},
-    {"Tigre", 88, 85, 65, 220, 15, 0},
-    {"Águia", 40, 160, 75, 6, 25, 0},
-    {"Gorila", 85, 40, 90, 160, 40, 0}
-};
+# Placar
+pontos_jogador = 0
+pontos_pc = 0
 
-void imprimirCarta(Carta c) {
-    printf("🐾 %s\n", c.nome);
-    printf("  Força: %d\n", c.forca);
-    printf("  Velocidade: %d\n", c.velocidade);
-    printf("  Inteligência: %d\n", c.inteligencia);
-    printf("  Peso: %d\n", c.peso);
-    printf("  Longevidade: %d\n", c.longevidade);
-    if (c.superTrunfo) {
-        printf("  SUPER TRUNFO!\n");
-    }
-}
+# Número de rodadas
+rodadas = int(input("Quantas rodadas você quer jogar? "))
 
-const char* nomeAtributo(int atributo) {
-    switch (atributo) {
-        case 1: return "Força";
-        case 2: return "Velocidade";
-        case 3: return "Inteligência";
-        case 4: return "Peso";
-        case 5: return "Longevidade";
-        default: return "Desconhecido";
-    }
-}
+for rodada in range(1, rodadas + 1):
+    print(f"\n🔷 RODADA {rodada}")
 
-int comparar(Carta jogador, Carta maquina, int atributo) {
-    if (jogador.superTrunfo) return 1;
-    if (maquina.superTrunfo) return -1;
+    # Sorteio de cartas
+    carta_jogador = random.choice(cartas)
+    carta_pc = random.choice([c for c in cartas if c != carta_jogador])
 
-    int valorJogador, valorMaquina;
-    switch (atributo) {
-        case 1: valorJogador = jogador.forca; valorMaquina = maquina.forca; break;
-        case 2: valorJogador = jogador.velocidade; valorMaquina = maquina.velocidade; break;
-        case 3: valorJogador = jogador.inteligencia; valorMaquina = maquina.inteligencia; break;
-        case 4: valorJogador = jogador.peso; valorMaquina = maquina.peso; break;
-        case 5: valorJogador = jogador.longevidade; valorMaquina = maquina.longevidade; break;
-        default: return 0;
-    }
+    # Exibe carta do jogador
+    print("\n🧍 Sua carta:")
+    for chave, valor in carta_jogador.items():
+        print(f"{chave.capitalize()}: {valor}")
 
-    if (valorJogador > valorMaquina) return 1;
-    if (valorJogador < valorMaquina) return -1;
-    return 0;
-}
+    # Escolha do atributo
+    atributo = input("\nEscolha um atributo (força, velocidade, inteligência, resistência): ").lower()
+    while atributo not in ["força", "velocidade", "inteligência", "resistência"]:
+        atributo = input("Atributo inválido. Escolha novamente: ").lower()
 
-void salvarResultado(Carta jogador, Carta maquina, int atributo, int resultado) {
-    FILE *fp = fopen("historico_partidas.txt", "a");
-    if (fp == NULL) {
-        printf(
+    valor_jogador = carta_jogador[atributo]
+    valor_pc = carta_pc[atributo]
+
+    print(f"\n💻 Carta do computador: {carta_pc['nome']} - {atributo.capitalize()}: {valor_pc}")
+
+    # Resultado da rodada
+    if valor_jogador > valor_pc:
+        print("✅ Você venceu a rodada!")
+        pontos_jogador += 1
+    elif valor_jogador < valor_pc:
+        print("❌ Você perdeu a rodada.")
+        pontos_pc += 1
+    else:
+        print("⚖️ Empate!")
+
+    # Placar parcial
+    print(f"🔢 Placar: Você {pontos_jogador} x {pontos_pc} Computador")
+
+# Resultado final
+print("\n🏁 FIM DO JOGO!")
+if pontos_jogador > pontos_pc:
+    print("🎉 Parabéns, você venceu o jogo!")
+elif pontos_jogador < pontos_pc:
+    print("😢 Que pena, o computador venceu.")
+else:
+    print("🤝 O jogo terminou empatado!")
